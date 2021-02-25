@@ -116,7 +116,7 @@
         <p class="text-center">Av. José Carlos Mariategui Lote 59 UCV "5"<br>
         Zona "A" Huaycán<br>
         RPC: 997 859084 - RPM: 945 931861 <br> 
-        www.abogadosejm.com</p>
+        https://ejm.pe</p>
     </div>
 </body>
 </html>

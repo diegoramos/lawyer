@@ -87,9 +87,7 @@ class Calendar extends Secure_area {
 
 	function tester($value = '') {
 		$data_calendar = $this->Calendar_model->getEventos();
-
 		foreach ($data_calendar as $value) {
-
 			echo $value->description;
 		}
 	}

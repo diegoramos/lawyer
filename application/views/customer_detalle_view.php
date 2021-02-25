@@ -116,6 +116,11 @@
                                   <h4>Archivos</h4>
                               </a></li>
                           <?php endif ?>
+                          <?php if ($is_actividad): ?>
+                            <li><a href="#actividad" data-toggle="tab" style="color:#23223D;">
+                                  <h4>Actividad</h4>
+                                </a></li>
+                          <?php endif ?>
                       </ul>
                       <div class="tab-content " style="background-color: #F3EEED;">
                           <div class="tab-pane" id="consultas">
@@ -222,6 +227,35 @@
                               </div>
                           </div>
                           <!-- /.tab-pane -->
+
+                          <!-- /.tab-pane -->
+                          <div class="tab-pane" id="actividad">
+                              <div class="box box-primary">
+                                <div class="box-header bg-primary">
+                                  <h3 class="box-title" style="color: white;">Lista de Actividades</h3>
+                                </div>
+                                <div class="box-body">
+                                  <table id="appointment" class="table table-bordered table-hover">
+                                      <thead>
+                                        <tr>
+                                          <th>Id</th>
+                                          <th>Paciente</th>
+                                          <th>Fecha</th>
+                                          <th>Hora Inicio</th>
+                                          <th>Hora Fin</th>
+                                          <th>Doctor</th>
+                                          <th>Estado</th>
+                                          <th style="width:150px;">Opción</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                      </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                          </div>
+                          <!-- /.tab-pane -->
+
                       </div>
                       <!--s /.tab-content -->
                   </div>
@@ -236,6 +270,104 @@
   <!-- /.content-wrapper -->
 
   <!--  TODOS LOS MODALS QUE EXISTEN -->
+
+
+ <div id="modal_edit_cita" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="error"></div>
+                <form class="form-horizontal" id="crud-form-event">
+                  <input type="hidden" name="event_id" id="event_id">
+                  <div class="form-group">
+                      <label class="col-sm-2 control-label">Estado</label>
+                      <div class="col-sm-9">
+                          <select class="form-control" name="status" id="status">
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Cancelada">Cancelada</option>
+                            <option value="Atendida">Atendida</option>
+                            <option value="No asistió">No asistió</option>
+                            <option value="Reagendada">Reagendada</option>
+                            <option value="Confirmada">Confirmada</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-2 control-label">Cliente</label>
+                      <div class="col-sm-9">
+                        <div class="">
+                            <input type="text" readonly="" class="form-control" id="search_patient" name="search_patient" placeholder="Buscar">
+                        </div>
+                        <span class="help-block"></span>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-2 control-label">Descripción</label>
+                      <div class="col-sm-9">
+                          <textarea class="form-control" id="description" name="description"></textarea>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Fecha</label>
+                    <div class="col-sm-4">
+                      <div class="input-group date" id='date_start'>
+                        <input type="text" id="start" name="start" class="form-control">
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  <div class="form-group">
+                    <!-- /.col-lg-6 -->
+                    <label class="col-sm-2 control-label">Hora</label>
+                    <div class="col-sm-3">
+                      <div class="input-group date" id="time_start">
+                        <input type="text" id="start_time" name="start_time" class="form-control">
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-time"></span>
+                          </span>
+                      </div>
+                    </div>
+                    <!-- /.col-lg-6 -->
+                    <label class="col-sm-2 control-label">Hora Fin</label>
+                    <div class="col-sm-3">
+                      <div class="input-group date" id="time_end">
+                        <input type="text" id="end_time" name="end_time" class="form-control">
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-time"></span>
+                          </span>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-2 control-label">Abogado</label>
+                      <div class="col-sm-9">
+                          <select name="lawyer_id" id="lawyer_id" class="form-control">
+                                <option value="">Seleccione Abogado</option>
+                              <?php foreach ($lawyer as $value) {?>
+                                <option value="<?php echo $value->lawyer_id; ?>"><?php echo $value->first_name . ' ' . $value->last_name; ?></option>
+                              <?php }?>
+                          </select>
+                          <span class="help-block"></span>
+                      </div>
+                  </div>
+
+                </form>
+            </div>
+            <div class="modal-footer cita">
+               <button type="button" class="btn btn-primary" id="btnUpdate" onclick="updateEvent()">Actualizar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+ </div>
 
   <!-- Bootstrap modal Consulta-->
   <div class="modal fade" id="modal_consulta" role="dialog" data-backdrop="static">
@@ -1035,10 +1167,10 @@
                       <div class="form-group">
                           <label class="col-sm-2 control-label">Abogado</label>
                           <div class="col-sm-9">
-                              <select name="doctor_id" id="doctor_id" class="form-control">
+                              <select name="lawyer_id" id="lawyer_id" class="form-control">
                                   <option value="">Seleccione Abogado</option>
                                   <?php foreach ($odontologo as $value) {?>
-                                  <option value="<?php echo $value->doctor_id; ?>">
+                                  <option value="<?php echo $value->lawyer_id; ?>">
                                       <?php echo $value->first_name . ' ' . $value->last_name; ?></option>
                                   <?php }?>
                               </select>

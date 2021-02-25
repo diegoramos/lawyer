@@ -24,12 +24,12 @@ class Calendar_model extends CI_Model {
 	private function _get_datatables_query_appointment($customer_id)
 	{
 		
-		$this->db->select('event_id, CONCAT(cu.first_name, " ", cu.last_name) AS name_customer, start_date, start_time, end_time, CONCAT(law.first_name, " ", law.last_name) AS name_lawyer,e.description,cus.hist_clinic, e.status,cu.person_id as person_pa_id');
+		$this->db->select('event_id, CONCAT(cu.first_name, " ", cu.last_name) AS name_customer, start_date, start_time, end_time, CONCAT(la.first_name, " ", la.last_name) AS name_lawyer,e.description, e.status,cu.person_id as person_pa_id');
 		$this->db->from('events e');
 		$this->db->join('customers cus', 'cus.customer_id = e.customer_id');
 		$this->db->join('lawyer law', 'law.lawyer_id = e.lawyer_id');
 		$this->db->join('peoples cu', 'cu.person_id = cus.person_id');
-		$this->db->join('peoples law', 'law.person_id = law.person_id');
+		$this->db->join('peoples la', 'la.person_id = law.person_id');
 		$this->db->where('e.customer_id', $customer_id);
 
 		//$this->db->where('pat.deleted', 1);
@@ -100,12 +100,12 @@ class Calendar_model extends CI_Model {
 
 	public function get_event_by_id($event_id='')
 	{
-		$this->db->select('event_id, CONCAT(cu.first_name, " ", cu.last_name) AS name_customer, end_date,start_date, CONCAT(start_date, " ", start_time) AS start_time,CONCAT(start_date, " ", end_time) AS end_time,law.lawyer_id, CONCAT(doc.first_name, " ", doc.last_name) AS name_lawyer,e.description,p.hist_clinic, e.status');
+		$this->db->select('event_id, CONCAT(cu.first_name, " ", cu.last_name) AS name_customer, end_date,start_date, CONCAT(start_date, " ", start_time) AS start_time,CONCAT(start_date, " ", end_time) AS end_time,law.lawyer_id, CONCAT(la.first_name, " ", la.last_name) AS name_lawyer,e.description, e.status');
 		$this->db->from('events e');
 		$this->db->join('customers cus', 'cus.customer_id = e.customer_id');
 		$this->db->join('lawyer law', 'law.lawyer_id = e.lawyer_id');
 		$this->db->join('peoples cu', 'cu.person_id = cus.person_id');
-		$this->db->join('peoples doc', 'doc.person_id = law.person_id');
+		$this->db->join('peoples la', 'la.person_id = law.person_id');
 		$this->db->where('e.event_id', $event_id);
 		$this->db->limit(1);
 		$query = $this->db->get();
@@ -174,6 +174,7 @@ class Calendar_model extends CI_Model {
 	$this->db->query($sql, array($_POST['customer_id'],$_POST['description'],$_POST['start'],date_format(date_create($_POST['start_time']),'H:i'),date_format(date_create($_POST['end_time']),'H:i'),$_POST['lawyer_id'],$_POST['status'],$_POST['event_id']));
 		return ($this->db->affected_rows()!=1)?false:true;
 	}
+
 	Public function updateEventCustomer()
 	{
 
@@ -190,6 +191,12 @@ class Calendar_model extends CI_Model {
 	$sql = "DELETE FROM events WHERE event_id = ?";
 	$this->db->query($sql, array($_GET['id']));
 		return ($this->db->affected_rows()!=1)?false:true;
+	}
+
+	public function event_delete($event_id)
+	{
+		$this->db->where('event_id', $event_id);
+		$this->db->delete($this->table);
 	}
 
 	/*Update  event */

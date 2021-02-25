@@ -49,7 +49,7 @@ class Customers extends Secure_area {
 		$data['is_tramite'] = $this->verificar_permiso_accion('tramite');
 		$data['is_proceso'] = $this->verificar_permiso_accion('proceso');
 		$data['is_archivo'] = $this->verificar_permiso_accion('images');
-
+		$data['is_actividad'] = $this->verificar_permiso_accion('actividad');
 		$this->load->view("include/header", $data);
 		$this->load->view('include/menu');
 		$this->load->view("customer_detalle_view", $data);
@@ -966,11 +966,11 @@ class Customers extends Secure_area {
 
 	private function _do_upload_files()
 	{
-		$config['upload_path']          = 'upload/';
-        $config['allowed_types']        = 'gif|jpg|png';
-        $config['max_size']             = 500; //set max size allowed in Kilobyte
-        $config['max_width']            = 1000; // set max width image allowed
-        $config['max_height']           = 1000; // set max height allowed
+		$config['upload_path']          = FCPATH .'/upload/';
+        $config['allowed_types']        = 'gif|jpg|jpeg|png|JPG|pdf|doc|docx|xls|xlsx|ppt|pptx';
+        $config['max_size']             = 2000; //set max size allowed in Kilobyte
+        $config['max_width']            = 2000; // set max width image allowed
+        $config['max_height']           = 2200; // set max height allowed
         $config['file_name']            = round(microtime(true) * 1000); //just milisecond timestamp fot unique name
 
         $this->load->library('upload', $config);
@@ -1013,6 +1013,62 @@ class Customers extends Secure_area {
 			exit();
 		}
 	}
+
+
+	//Actividad de la agenda
+	public function ajax_list_appointment($patient_id=-1){
+
+		$list = $this->Calendar_model->get_datatables_appointment($patient_id);
+		$data = array();
+		$no = $_POST['start'];
+		foreach ($list as $appointment) {
+			$no++;
+			$row = array();
+			$row[] = $appointment->event_id;
+			$row[] = $appointment->name_customer;
+			$row[] = $appointment->start_date;
+			$row[] = $appointment->start_time;
+			$row[] = $appointment->end_time;
+			$row[] = $appointment->name_lawyer;
+			$row[] = $appointment->status;
+			$action='';
+			if ($this->verificar_permiso_accion('update_event')){
+				$action .='<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Hapus" onclick="edit_event('.$appointment->event_id.')"><i class="glyphicon glyphicon-edit"></i> Editar</a>';
+			}
+			if ($this->verificar_permiso_accion('delete')){
+				$action .='<a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus" onclick="delete_event('.$appointment->event_id.')"><i class="glyphicon glyphicon-trash"></i> Del</a>';
+			}
+
+			$row[] = $action;
+		
+			$data[] = $row;
+		}
+
+		$output = array(
+						"draw" => $_POST['draw'],
+						"recordsTotal" => $this->Calendar_model->count_filtered_appointment($patient_id),
+						"recordsFiltered" => $this->Calendar_model->count_filtered_appointment($patient_id),
+						"data" => $data,
+				);
+		//output to json format
+		echo json_encode($output);
+	}
+
+	public function get_event_by_id($id=-1)
+	{
+		$result = $this->Calendar_model->get_event_by_id($id);
+		echo json_encode($result);
+	}
+	public function ajax_update_event() {
+		$result = $this->Calendar_model->updateEventCustomer();
+		echo $result;
+	}
+
+	public function event_delete($event_id) {
+		$this->Calendar_model->event_delete($event_id);
+		echo json_encode(array("status" => TRUE));
+	}
+
 }
 
 /* End of file Customers.php */

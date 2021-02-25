@@ -77,7 +77,7 @@
                         </div>
                         <span class="help-block"></span>
                       </div>
-                      <input type="hidden" name="patient_id" id="patient_id">
+                      <input type="hidden" name="customer_id" id="customer_id">
                   </div>
                   <div class="form-group">
                       <label class="col-sm-2 control-label">Descripción</label>
@@ -89,7 +89,7 @@
                   <div class="form-group">
                       <label class="col-sm-2 control-label">Abogado</label>
                       <div class="col-sm-9">
-                          <select name="doctor_id" id="doctor_id" class="form-control">
+                          <select name="lawyer_id" id="lawyer_id" class="form-control">
                                 <option value="">Seleccione Abogado</option>
                               <?php foreach ($abogado as $value) {?>
                                 <option value="<?php echo $value->lawyer_id; ?>"><?php echo $value->first_name . ' ' . $value->last_name; ?></option>
@@ -155,7 +155,7 @@
                 <form class="form-horizontal" id="form_patient">
                   <input type="hidden" name="event_id" id="event_id">
                 <div class="form-group">
-                    <label class="control-label col-md-2">C[odigo</label>
+                    <label class="control-label col-md-2">Código</label>
                     <div class="col-md-9">
                         <input name="hist_clinic" id="hist_clinic" value="<?php echo $history_clinic; ?>" class="form-control" type="text" readonly="readonly">
                         <span class="help-block"></span>

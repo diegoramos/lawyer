@@ -104,7 +104,9 @@
 <?php if ($this->uri->segment(1) == 'calendar'): ?>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/dist/js/calendar.js"></script>
 <?php endif?>
-
+<?php if ($this->uri->segment(2)=='view'): ?>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/dist/js/appointment.js"></script>
+<?php endif ?>
 <?php if ($this->uri->segment(1) == 'reports'): ?>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/dist/js/reports.js"></script>
 <?php endif?>
