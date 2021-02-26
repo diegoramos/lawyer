@@ -842,7 +842,23 @@ class Customers extends Secure_area {
 			$row[] = '<a href="'.base_url().'upload/'.$files->file_name.'" data-toggle="lightbox" data-title="'.$files->resolucion.'" data-footer="'.$files->file_name.'">
                         <img src="'.base_url().'upload/'.$files->file_name.'" height="300" width="100%" class="img-fluid">
                       </a>';
-			else
+
+			if($info->getExtension() == 'doc' || $info->getExtension() == 'docx')
+			$row[] = '<a href="'.base_url().'upload/'.$files->file_name.'" download title="Archivo tipo Word">
+                      		<button type="submit"><i class="fa fa-file-word-o" aria-hidden="true"></i> Descargar</button>
+                      </a>';
+
+			if($info->getExtension() == 'xls' || $info->getExtension() == 'xlsx')
+			$row[] = '<a href="'.base_url().'upload/'.$files->file_name.'" download title="Archivo tipo Excel">
+                      		<button type="submit"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar</button>
+                      </a>';
+
+			if($info->getExtension() == 'ppt' || $info->getExtension() == 'pptx')
+			$row[] = '<a href="'.base_url().'upload/'.$files->file_name.'" download title="Archivo tipo Power Point">
+                      		<button type="submit"><i class="fa fa-file-powerpoint-o" aria-hidden="true"></i> Descargar</button>
+                      </a>';
+
+			if($info->getExtension() == 'pdf')
 			$row[] = '<a href="'.base_url().'upload/'.$files->file_name.'" data-toggle="lightbox" data-title="'.$files->resolucion.'" data-footer="'.$files->file_name.'">
                         <embed src="'.base_url().'upload/'.$files->file_name.'" type="application/pdf" width="100%" height="300px" class="img-fluid">
                       </a>';
